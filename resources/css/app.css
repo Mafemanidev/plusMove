@@ -1,0 +1,5 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+.min-vh-100 {
+    min-height: 100vh;
+}
