@@ -10,7 +10,9 @@ class TrackingDetail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_id', 'status', 'message'
+        'order_id',
+        'status',
+        'message'
     ];
 
     public function order() {

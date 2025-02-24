@@ -8,6 +8,16 @@
             @csrf
 
             <div class="mb-3">
+                <label for="recipient_name" class="form-label">Recipient Name</label>
+                <input type="text" class="form-control" name="recipient_name" id="recipient_name" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="recipient_email" class="form-label">Recipient Email</label>
+                <input type="email" class="form-control" name="recipient_email" id="recipient_email" required>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Weight (kg)</label>
                 <input type="number" step="0.1" name="weight" class="form-control" required>
             </div>

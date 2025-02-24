@@ -9,7 +9,14 @@ class Order extends Model {
     use HasFactory;
 
     protected $fillable = [
-        'weight', 'num_packages', 'warehouse_id', 'to_address', 'driver_id', 'tracking_code'
+        'weight',
+        'num_packages',
+        'warehouse_id',
+        'to_address',
+        'driver_id',
+        'tracking_code',
+        'recipient_name',
+        'recipient_email',
     ];
 
     public function warehouse() {

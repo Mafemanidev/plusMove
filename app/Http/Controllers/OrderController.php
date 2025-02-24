@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\TrackingDetail;
 use App\Mail\OrderCreated;
+use App\Mail\OrderCreatedRecipientMail;
 use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller {
@@ -35,7 +36,9 @@ class OrderController extends Controller {
             'num_packages' => 'required|integer|min:1',
             'warehouse_id' => 'required|exists:warehouses,id',
             'to_address' => 'required|string|max:255',
-            'driver_id' => 'nullable|exists:users,id'
+            'driver_id' => 'nullable|exists:users,id',
+            'recipient_name' => 'required|string',
+            'recipient_email' => 'required|email'
         ]);
 
         $trackingCode = Str::random(10);
@@ -46,7 +49,9 @@ class OrderController extends Controller {
             'warehouse_id' => $request->warehouse_id,
             'to_address' => $request->to_address,
             'tracking_code' => $trackingCode,
-            'driver_id' => $request->driver_id
+            'driver_id' => $request->driver_id,
+            'recipient_name' => $request->recipient_name,
+            'recipient_email' => $request->recipient_email,
         ]);
 
 
@@ -59,6 +64,11 @@ class OrderController extends Controller {
         //Send email to assigned driver
         if ($order->driver) {
             Mail::to($order->driver->email)->send(new OrderCreated($order));
+        }
+
+        // Send email notification to recipient
+        if ($order->recipient_email) {
+            Mail::to($order->recipient_email)->send(new OrderCreatedRecipientMail($order));
         }
 
         return redirect()->route('orders.index')->with('success', 'Order created successfully!');

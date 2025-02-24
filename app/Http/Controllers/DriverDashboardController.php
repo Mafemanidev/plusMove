@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderCreatedRecipientMail;
+use App\Mail\recipientTrackingUpdateMail;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\TrackingDetail;
 use App\Models\StatusProgress;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class DriverDashboardController extends Controller {
 
@@ -30,11 +33,16 @@ class DriverDashboardController extends Controller {
 
         $order = Order::findOrFail($orderId);
 
-        TrackingDetail::create([
+        $trackingDetails = TrackingDetail::create([
             'order_id' => $order->id,
             'status' => StatusProgress::find($request->status)->name,
             'message' => $request->message ?? null,
         ]);
+
+        // Send email updates to recipient
+        if ($order->recipient_email) {
+            Mail::to($order->recipient_email)->send(new recipientTrackingUpdateMail($trackingDetails, $order));
+        }
 
         return redirect()->route('driver.dashboard')->with('success', 'Tracking status updated!');
     }
